@@ -56,8 +56,8 @@ It does not consider some important steps:
 
 $$
 \begin{aligned}
-    \text{max}_{y_i^j} \quad & \Sigma_{i \in I, \; j \in J} \; y_i^j \cdot (U_i - C_j) \\
-    y_i^j \cdot (U_i^j - C_j) &\ge 0 \quad \forall i \in I, \; j \in J \\
+    \text{MAX}_{y_i^j} \quad & \Sigma_{i \in I,  j \in J}  y_i^j \cdot (U_i - C_j) \\
+    y_i^j \cdot (U_i^j - C_j) &\ge 0 \quad \forall i \in I,  j \in J \\
     \Sigma_{i \in I} y_i &\le \text{limit}_j \quad \forall j \in J \\
     y_i^j &\in \{0, 1\}
 \end{aligned}
