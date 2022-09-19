@@ -19,13 +19,13 @@ U = [
     80 100 200
 ]
 
-I = 1:size(U)[1]
-J = 1:length(C)
-W = 1:SCENARIOS
-
 C = [
     c .+ rand(COST_UNCERTAINTY, SCENARIOS) for c in BASE_COST
 ]
+
+I = 1:size(U)[1]
+J = 1:length(C)
+W = 1:SCENARIOS
 
 model = Model(GLPK.Optimizer)
 
