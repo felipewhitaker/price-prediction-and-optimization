@@ -1,12 +1,12 @@
 # Package Price Prediction and Auction Optimization
 
-Online marketplaces exist to match users to a produt. Considering that both users financial power and products are limited, how should a system recommend products and calculate how much to charge?
+Online marketplaces have grown a lot during the last years. They essencially match users to produts.However, considering that both users financial power and the amount of products are limited, how should a system recommend products and calculate how much to charge?
 
-This repository is a quick study on how to understand pricing (how much?) and availability (how many?) and match them to users (who?).
+This repository is a quick study on how to optimized the match between uncertain predicted costs (how much?) and product availability (how many can be sold?) to users (who will buy? - and how much should be charged?).
 
 ## Problem
 
-A simple example that can be expanded on is matching clients to ice cream flavors. Each user has a flavor preference - which makes the price that they are willing to pay change e.g. someone that loves strawberries would be willing to pay more for a strawberry ice cream than a chocolat one -, and the cost of ice creams also change based on flavor - e.g. pistacchio ice cream can have a much greater cost than a vanilla one.
+A simple example that can be expanded on is matching clients to ice cream flavors. Each user has a flavor preference, and the cost of ice creams depends on its package and can change based on flavor - e.g. pistacchio ice cream can have a much greater cost than a vanilla one.
 
 Moreover, the future prices of resources are not certain: if cocoa plantations get sick, chocolat ice cream can get much more expansive to produce.
 
@@ -34,19 +34,25 @@ Therefore, predicting what could happen - regarding production, transportation, 
 Considering the [problem](#problem) presented, there are three main variables that must be modelled:
 
 - How many of each product is available;
-- How much is users willing to pay for each product; and
-- How much each product costs to produce.
+- How much each product costs to produce; and
+- How much are users willing to pay for each product
 
-It is clear that each one of those have uncertanties related to them and can be very difficult to estimate e.g. how much users are willing to pay. Further complicating, the cost of a product can have lots of factors - possibily with correlations between them -, making it harder to predict.
+It is clear that each one of those have uncertanties related to them and can be very difficult to estimate e.g. how much users are willing to pay. Furthermore, the cost of a product can have lots of factors - possibily with correlations between them -, making it harder to predict.
 
-With this in mind, some challenges noted are:
+With this in mind, some challenges are:
 
 - Calculating, understading and communicating the Prediction Interval; and
 - Calculating the Prediction Interval for a sum of factors ([discussion in cross-validated](https://stats.stackexchange.com/questions/14987/the-sum-of-prediction-intervals))
 
 ## Optimization
 
-The optimization model below is used to choose which packages are sold to whom based on how many there are available and that the user would buy a package if it is below its maximum price. It does not consider recommendation, as in it assumes that, if an user would buy the package, it will be recommended and it will be bought.
+To match which packages are sold to whom based on how many there are available, an optimization model is used, present below. It maximizes profits restricted to the fact that packages are only sold if an user is willing to pay for it more than it would cost.
+
+It does not consider some important steps:
+
+- Users pricing: the maximum amount that an user would pay is known and is always the package's price;
+- Financial limit: users do not have a financial limit, enabling them to buy as many packages as they would; and
+- Recommendation: if an user would buy the package, it will be recommended and it will be bought;
 
 $$
 \begin{aligned}
@@ -64,14 +70,7 @@ where:
 - $U_i^j$ is how much an user is willing to pay for package *j*; and
 - $y_i^j$ is an indicator that user *i* bought package *j*
 
-Although this models considers that $U_i^j$ and $C_j$ to be deterministic (have a fixed value), it can be expanded to consider different scenarios - e.g. have uncertainty related to its values. Solving these cenarios and averaging them out is a technique called [Sample Average Approximation](https://link.springer.com/article/10.1023/A:1021814225969), which can be used to approximate any real problem given enough scenarios. An example that expands uncertainty for $C_j$ can be found in [main.jl](./src/main.jl), where this model was also implemented.
-
-Limitations:
-
-- Users maximum buy price is not known;
-- Users do not necessarily buy a package if it is inside their buy range;
-- Users are always shown a package if they can afford it, which is then necessarily bought; and
-- Users do not have a financial limit, enabling them to buy as many packages as they would
+Although this models considers that $U_i^j$ and $C_j$ to be deterministic (have a fixed value), it can be expanded to consider different scenarios - e.g. have uncertainty related to its values. Solving these cenarios and averaging them out is a technique called [Sample Average Approximation](https://link.springer.com/article/10.1023/A:1021814225969), which can be used to approximate any real problem given enough scenarios. An example that expands uncertainty for $C_j$ can be found in [main.jl](./src/main.jl), where this model is implemented.
 
 ### Results example
 
